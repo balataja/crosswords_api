@@ -6,7 +6,7 @@ const Crossword = require('../models/crossword');
  */
 exports.getCrosswords = async (ctx, next) => {
   try {
-    //console.log('trying to get crosswords..')
+    console.log('trying to get crosswords..')
     const crosswords = await Crossword.find({});
     ctx.status = 200;
     ctx.body = Object.assign(crosswords);

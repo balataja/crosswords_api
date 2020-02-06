@@ -15,8 +15,8 @@ exports.getGridState = async (ctx, next) => {
 exports.updateIfCurrentGridState = async (ctx, next) => {
     try {
         console.log('trying to update gridState.. '+ ctx.params.id);
-        const gridStates = await GridState.findOne({_id: ctx.params.id});
-        const gridState = gridStates[0];
+        const gridState = await GridState.findOne({_id: ctx.params.id});
+        //const gridState = gridStates[0];
         gridState.entries = [];
         ctx.request.body.forEach(function(row, index, array) {
             var newRow = [];

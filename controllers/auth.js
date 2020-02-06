@@ -75,7 +75,7 @@ exports.register = async (ctx, next) => {
     { name: 'name', required: true },
     { name: 'password', required: true },
   ]);
-
+console.log('registering..');
   if (validation && validation.length && validation[0].error) {
     ctx.status = 422;
     ctx.body = { errors: validation };
@@ -99,7 +99,7 @@ exports.register = async (ctx, next) => {
           password,
           email,
         });
-
+console.log('about so register user..');
         const savedUser = await user.save();
         ctx.body = Object.assign(ctx.body || {}, createTokenCtx(savedUser));
         await next();
