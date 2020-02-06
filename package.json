@@ -4,7 +4,7 @@
   "description": "Koa-based API for MKRN starter.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "index.js", 
     "test": "jest --coverage --watch"
   },"engines": {
     "node": "8.12.0"
