@@ -18,7 +18,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.database.url, config.database.opts);
 
 const app = new Koa()
-  .use(cors())
+  //.use(cors())
   .use(logger())
   .use(bodyParser())
   .use(routes);
