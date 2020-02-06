@@ -31,3 +31,8 @@ exports.getCrossword = async (ctx, next) => {
     ctx.throw(500, err);
   }
 };
+
+exports.test = async (ctx, next) => {
+  ctx.status = 200;
+  await next();
+}
