@@ -12,7 +12,7 @@ module.exports = () => {
 
   switch (process.env.NODE_ENV) {
     case 'production':
-      Object.assign(dbConfig, {url: 'mongodb://jamesUrs:test1234@ds045897.mlab.com:45897/heroku_t380f0c8'})
+      Object.assign(dbConfig, {url: 'mongodb://jamesUsr:test1234@ds045897.mlab.com:45897/heroku_t380f0c8'})
       //Object.assign(dbConfig, { url: process.env.MONGODB_URI || 'mongodb://localhost:27017/crosswordDb' });
       break;
     case 'stage':
