@@ -8,10 +8,14 @@ exports.getCrosswords = async (ctx, next) => {
   try {
     console.log('trying to get crosswords..')
     const crosswords = await Crossword.find({});
+    console.log('just after crossword.find()');
+    console.log(crosswords);
     ctx.status = 200;
     ctx.body = Object.assign(crosswords);
     await next();
   } catch (err) {
+    console.log('get-crosswords errored out..')
+    console.log(err);
     ctx.throw(500, err);
   }
 };
