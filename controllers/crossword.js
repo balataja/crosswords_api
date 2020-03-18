@@ -36,6 +36,22 @@ exports.getCrossword = async (ctx, next) => {
   }
 };
 
+/**
+ * getUser  - Returns JSON for specified user
+ * @returns {Object}  - Single user object
+ */
+exports.getRandomCrossword = async (ctx, next) => {
+  try {
+    //console.log('trying to get crossword..' + ctx.params.id)
+    const crossword = await Crossword.aggregate([{ $sample: { size: 1 } }]);
+    ctx.status = 200;
+    ctx.body = Object.assign(crossword);
+    await next();
+  } catch (err) {
+    ctx.throw(500, err);
+  }
+};
+
 exports.test = async (ctx, next) => {
   ctx.status = 200;
   await next();
