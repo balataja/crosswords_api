@@ -74,6 +74,7 @@ io.sockets.on('connection', function(socket){
     console.log('server: player disconnected..');
     //socket.broadcast.emit('player_disconnected', msg)
     io.sockets.in(msg.roomNumber).emit('player_disconnected', 'player disconnected.');
+    socket.leave(msg.roomNumber);
   })
   
   //socket.on('checking_clue', function(msg){

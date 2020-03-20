@@ -2,7 +2,7 @@ const GridState = require('../models/gridState');
 
 exports.getGridState = async (ctx, next) => {
     try {
-        console.log('trying to get gridState..' + ctx.params.id)
+        //console.log('trying to get gridState..' + ctx.params.id)
         const gridState = await GridState.findOne({_id: ctx.params.id})
         ctx.status = 200;
         ctx.body = Object.assign(gridState);
@@ -14,7 +14,7 @@ exports.getGridState = async (ctx, next) => {
 
 exports.updateIfCurrentGridState = async (ctx, next) => {
     try {
-        console.log('trying to update gridState.. '+ ctx.params.id);
+        //console.log('trying to update gridState.. '+ ctx.params.id);
         const gridState = await GridState.findOne({_id: ctx.params.id});
         //const gridState = gridStates[0];
         gridState.entries = [];
