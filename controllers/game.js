@@ -80,10 +80,8 @@ exports.joinGame = async (ctx, next) => {
             playerNumber: game.players.length + 1,
         };
         console.log(player);
-        var res2 = await Game.findOneAndUpdate(ctx.request.body.gameId,
-            {
-                $push: {players: player} 
-            },
+        var res2 = await Game.findByIdAndUpdate(ctx.request.body.gameId,
+            {$push: {players: player}},
             {safe: true, upsert: true}
         );
 
@@ -94,7 +92,10 @@ exports.joinGame = async (ctx, next) => {
             createdDate: date,
             isActive: true
         }
-        const res = await User.findByIdAndUpdate(ctx.request.body.userId, {$push: {games: userGame}}, {safe: true, upsert: true})
+        const res = await User.findByIdAndUpdate(ctx.request.body.userId, 
+            {$push: {games: userGame}}, 
+            {safe: true, upsert: true}
+        )
 
         var blah = {
             user: res,
