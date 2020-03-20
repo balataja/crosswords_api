@@ -62,8 +62,8 @@ exports.addGame = async (ctx, next) => {
 
 exports.joinGame = async (ctx, next) => {
     try {
-        //console.log('joining game from controller..')
-        //console.log(ctx.request.body.gameId);
+        console.log('joining game from controller..')
+        console.log(ctx.request.body);
         const game = await Game.findById(ctx.request.body.gameId);
 
         game.players.forEach(function(player, index, array) {
@@ -79,10 +79,12 @@ exports.joinGame = async (ctx, next) => {
             userId: ctx.request.body.userId,
             playerNumber: game.players.length + 1,
         };
-        await Game.findOneAndUpdate(ctx.request.body.gameId,
+        console.log(player);
+        var res2 = await Game.findOneAndUpdate(ctx.request.body.gameId,
             {
                 $push: {players: player} 
-            }
+            },
+            {safe: true, upsert: true}
         );
 
         const date = new Date();
@@ -94,7 +96,11 @@ exports.joinGame = async (ctx, next) => {
         }
         const res = await User.findByIdAndUpdate(ctx.request.body.userId, {$push: {games: userGame}}, {safe: true, upsert: true})
 
-        ctx.body = res;
+        var blah = {
+            user: res,
+            game: res2
+        }
+        ctx.body = blah;
         ctx.status = 200;
         await next();
     } catch (err) {
