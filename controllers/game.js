@@ -66,11 +66,12 @@ exports.joinGame = async (ctx, next) => {
         //console.log(ctx.request.body.gameId);
         const game = await Game.findById(ctx.request.body.gameId);
 
-        game.players.forEach(async function(player, index, array) {
+        game.players.forEach(function(player, index, array) {
             if (player.userId === ctx.request.body.userId) {
                 console.log('player has already joined this game');
-                ctx.status = 200;
-                await next();
+                //ctx.status = 200;
+                //await next();
+                throw 'player has already joined this game';
             }
         });
 
