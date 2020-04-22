@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { updateIfCurrentPlugin } = require('mongoose-update-if-current');
+//const { updateIfCurrentPlugin } = require('mongoose-update-if-current');
 
 const Schema = mongoose.Schema;
 
@@ -23,6 +23,6 @@ const GridStateSchema = new Schema({
     ],
 })
 
-GridStateSchema.plugin(updateIfCurrentPlugin, { strategy: 'version' });
+//GridStateSchema.plugin(updateIfCurrentPlugin, { strategy: 'version' });
 
 module.exports = mongoose.model('GridState', GridStateSchema);

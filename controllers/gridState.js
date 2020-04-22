@@ -17,14 +17,27 @@ exports.updateIfCurrentGridState = async (ctx, next) => {
         //console.log('trying to update gridState.. '+ ctx.params.id);
         const gridState = await GridState.findOne({_id: ctx.params.id});
         //const gridState = gridStates[0];
-        gridState.entries = [];
-        ctx.request.body.forEach(function(row, index, array) {
-            var newRow = [];
-            row.forEach(function(square, index, array) {
-                newRow.push(square);
-            })
-            gridState.entries.push(newRow);
-        })
+        //gridState.entries = [];
+        console.log("cells..");
+        console.log(ctx.request.body.cells);
+        const grid = ctx.request.body.grid;
+        const cells = ctx.request.body.cells;
+
+        cells.forEach(cell => {
+            var temp = gridState.entries[cell.x][cell.y];
+            console.log(temp);
+            if (!temp.isCorrect) {
+                gridState.entries[cell.x][cell.y] = grid[cell.x][cell.y];
+            }
+            console.log(gridState.entries[cell.x][cell.y]);
+        });
+        // ctx.request.body.grid.forEach(function(row, index, array) {
+        //     var newRow = [];
+        //     row.forEach(function(square, index, array) {
+        //         newRow.push(square);
+        //     })
+        //     gridState.entries.push(newRow);
+        // })
 
         await gridState.save();
         ctx.status = 200;
