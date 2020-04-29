@@ -8,6 +8,8 @@ const Schema = mongoose.Schema;
 const CrosswordSchema = new Schema({
     id: String,
     name: String,
+    puzzleClue: String,
+    dow: String,
     date: Date,
     entries: [
         {

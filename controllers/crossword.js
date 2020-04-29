@@ -43,7 +43,25 @@ exports.getCrossword = async (ctx, next) => {
 exports.getRandomCrossword = async (ctx, next) => {
   try {
     //console.log('trying to get crossword..' + ctx.params.id)
-    const crossword = await Crossword.aggregate([{ $sample: { size: 1 } }]);
+    const crossword = await Crossword.aggregate([
+      { $match: { "cols": { $lt: 21 } } },
+      { $sample: { size: 1 } }
+    ]);
+    ctx.status = 200;
+    ctx.body = Object.assign(crossword);
+    await next();
+  } catch (err) {
+    ctx.throw(500, err);
+  }
+};
+
+exports.getRandomSundayCrossword = async (ctx, next) => {
+  try {
+    //console.log('trying to get crossword..' + ctx.params.id)
+    const crossword = await Crossword.aggregate([
+      { $match: { "cols": { $gte: 21 } } },
+      { $sample: { size: 1 } }
+    ]);
     ctx.status = 200;
     ctx.body = Object.assign(crossword);
     await next();
