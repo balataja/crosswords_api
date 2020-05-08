@@ -21,6 +21,14 @@ const GridStateSchema = new Schema({
             GridTile
         ]
     ],
+    scoreboard: [
+        {
+            playerNumber: Number,
+            playerName: String,
+            cellsAnswered: Number,
+            wordsCompleted: Number,
+        }
+    ]
 })
 
 //GridStateSchema.plugin(updateIfCurrentPlugin, { strategy: 'version' });

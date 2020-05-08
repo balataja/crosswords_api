@@ -53,22 +53,22 @@ io.sockets.on('connection', function(socket){
 
   socket.on('clue_answered', function(msg){
     //nsp.emit('update_model', msg);
-    console.log(socket);
-    console.log('client: ' + socket.id + ' answeredBy: ' + msg.playerNumber +  ' room#: ' + msg.roomNumber);
+    console.log('client: ' + socket.id + ' answeredBy: ' + msg.playerName +  ' room#: ' + msg.roomNumber);
     //socket.broadcast.emit('update_other_users', 'too slow!')
-    socket.to(msg.roomNumber).emit('update_other_users', 'too slow!');
+    io.in(msg.roomNumber).emit('update_other_users', 'too slow!'); //updating sender as well to update their own scoreboard
+    //socket.to(msg.roomNumber).emit('update_other_users', 'too slow!');
   });
 
   socket.on('player_joined_game', function(msg){
     //nsp.emit('update_model', msg);
-    console.log('player: ' + socket.id + ' number: ' + msg.playerNumber + ' joined the game.')
-    socket.to(msg.roomNumber).emit('other_player_joined_game', msg.playerNumber);
+    console.log('player: ' + socket.id + ' name: ' + msg.playerName + ' joined the game.')
+    socket.to(msg.roomNumber).emit('other_player_joined_game', msg.playerName);
   });
 
   socket.on('player_left_game', function(msg){
     //nsp.emit('update_model', msg);
-    console.log('player: ' + socket.id + ' number: ' + msg.playerNumber + ' has left the game.')
-    socket.to(msg.roomNumber).emit('player_disconnected', 'player ' + msg.playerNumber + ' has disconnected.');
+    console.log('player: ' + socket.id + ' name: ' + msg.playerName + ' has left the game.')
+    socket.to(msg.roomNumber).emit('player_disconnected',msg.playerName + ' has disconnected.');
     socket.leave(msg.roomNumber);
   });
 

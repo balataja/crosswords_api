@@ -16,20 +16,23 @@ exports.updateIfCurrentGridState = async (ctx, next) => {
     try {
         //console.log('trying to update gridState.. '+ ctx.params.id);
         const gridState = await GridState.findOne({_id: ctx.params.id});
-        //const gridState = gridStates[0];
-        //gridState.entries = [];
-        console.log("cells..");
-        console.log(ctx.request.body.cells);
         const grid = ctx.request.body.grid;
         const cells = ctx.request.body.cells;
 
+        let playerScore = gridState.scoreboard.find(o => o.playerNumber === ctx.request.body.playerNumber);
         cells.forEach(cell => {
             var temp = gridState.entries[cell.x][cell.y];
-            console.log(temp);
             if (!temp.isCorrect) {
                 gridState.entries[cell.x][cell.y] = grid[cell.x][cell.y];
+                playerScore.cellsAnswered++;
             }
-            console.log(gridState.entries[cell.x][cell.y]);
+        });
+        playerScore.wordsCompleted++;
+        gridState.scoreboard.find((o, i) => {
+            if (o.playerNumber === ctx.request.body.playerNumber) {
+                gridState.scoreboard[i] = playerScore;
+                return true; // stop searching
+            }
         });
         // ctx.request.body.grid.forEach(function(row, index, array) {
         //     var newRow = [];
@@ -56,7 +59,15 @@ exports.updateIfCurrentGridState = async (ctx, next) => {
 exports.initializeGridState = async (ctx, next) => {
     try {
         const gridState = new GridState({
-            entries: ctx.request.body
+            entries: ctx.request.body.grid,
+            scoreboard: [
+                {
+                    playerNumber: 1,
+                    playerName: ctx.request.body.playerName,
+                    cellsAnswered: 0,
+                    wordsCompleted: 0,
+                }
+            ],
         });
 
         var res = await gridState.save();

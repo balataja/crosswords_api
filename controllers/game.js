@@ -1,6 +1,7 @@
 const Game = require('../models/game');
 var ObjectId = require('mongoose').Types.ObjectId;
 const User = require('../models/user');
+const GridState = require('../models/gridState');
 
 exports.getGame = async (ctx, next) => {
     try {
@@ -74,10 +75,11 @@ exports.joinGame = async (ctx, next) => {
                 throw 'player has already joined this game';
             }
         });
-
+      
+        const playerNumber = game.players.length + 1;
         const player = {
             userId: ctx.request.body.userId,
-            playerNumber: game.players.length + 1,
+            playerNumber: playerNumber,
         };
         console.log(player);
         var res2 = await Game.findByIdAndUpdate(ctx.request.body.gameId,
@@ -94,6 +96,17 @@ exports.joinGame = async (ctx, next) => {
         }
         const res = await User.findByIdAndUpdate(ctx.request.body.userId, 
             {$push: {games: userGame}}, 
+            {safe: true, upsert: true}
+        )
+
+        const score = {
+            playerNumber: playerNumber,
+            playerName: res.fullName,
+            cellsAnswered: 0,
+            wordsCompleted: 0,
+        };
+        const res3 = await GridState.findByIdAndUpdate(game.gridStateId,
+            {$push: {scoreboard: score}}, 
             {safe: true, upsert: true}
         )
 
