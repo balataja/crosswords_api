@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "jest --coverage --watch"
-  },"engines": {
+  },
+  "engines": {
     "node": "8.12.0"
   },
   "repository": "https://github.com/joshuaslate/mkrn-starter.git",
