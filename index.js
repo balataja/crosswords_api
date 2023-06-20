@@ -42,10 +42,10 @@ const app = new Koa()
 
 const server = http.createServer(app.callback())
 const io = socket(server, {
-  // cors: {
-  //   origin: "https://localhost:8080",
-  //   methods: ["GET", "POST"]
-  // }
+  cors: {
+    origin: "https://balataja-crosswords-app-cfe0671b94fc.herokuapp.com/",
+    methods: ["GET", "POST"]
+  }
 });
 
 console.log('attempting to connect..')
