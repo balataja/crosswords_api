@@ -18,7 +18,9 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.database.url, config.database.opts);
 
 const app = new Koa()
-  .use(cors())
+  .use(cors({
+    origin: false,
+  }))
   // .use(function(req, res, next) {
   //   res.header("Access-Control-Allow-Origin", '*');
   //   res.header("Access-Control-Allow-Credentials", true);
@@ -39,7 +41,12 @@ const app = new Koa()
 // });
 
 const server = http.createServer(app.callback())
-const io = socket(server)
+const io = socket(server, {
+  // cors: {
+  //   origin: "https://localhost:8080",
+  //   methods: ["GET", "POST"]
+  // }
+});
 
 console.log('attempting to connect..')
 io.sockets.on('connection', function(socket){
@@ -55,13 +62,14 @@ io.sockets.on('connection', function(socket){
     //nsp.emit('update_model', msg);
     console.log('client: ' + socket.id + ' answeredBy: ' + msg.playerName +  ' room#: ' + msg.roomNumber);
     //socket.broadcast.emit('update_other_users', 'too slow!')
-    io.in(msg.roomNumber).emit('update_other_users', 'too slow!'); //updating sender as well to update their own scoreboard
-    //socket.to(msg.roomNumber).emit('update_other_users', 'too slow!');
+    //io.in(msg.roomNumber).emit('update_other_users', 'too slow!'); //updating sender as well to update their own scoreboard
+    socket.to(msg.roomNumber).emit('update_other_users', 'too slow!');
   });
 
   socket.on('player_joined_game', function(msg){
     //nsp.emit('update_model', msg);
-    console.log('player: ' + socket.id + ' name: ' + msg.playerName + ' joined the game.')
+    console.log('player: ' + socket.id + ' name: ' + msg.playerName + ' joined the game: ' + msg.roomNumber)
+    socket.join(msg.roomNumber);
     socket.to(msg.roomNumber).emit('other_player_joined_game', msg.playerName);
   });
 
@@ -86,9 +94,8 @@ io.sockets.on('connection', function(socket){
   //});
 });
 
-// const server = http.listen(config.server.port, function(){
-//   console.log('listening on *:' + config.server.port);
-// });
+console.log('listening on *:' + config.server.port);
+
 
 const temp = server.listen(config.server.port);
 

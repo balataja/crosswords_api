@@ -5,7 +5,7 @@ const GridState = require('../models/gridState');
 
 exports.getGame = async (ctx, next) => {
     try {
-        //console.log('trying to get game..' + ctx.params.id);
+        console.log('trying to get game..' + ctx.params.id);
         const game = await Game.findById(ctx.params.id);
         //console.log(game);
         ctx.status = 200; 
@@ -18,7 +18,7 @@ exports.getGame = async (ctx, next) => {
 
 exports.getGames = async (ctx, next) => {
     try {
-        //console.log('trying to get games..');
+        console.log('trying to get games..');
         //console.log(ctx.params.id);
         const games = await Game.find({isActive: true});//{userId: new ObjectId(ctx.params.id)});
         ctx.status = 200;

@@ -11,11 +11,15 @@ module.exports = {
   passport: () => {
     const localLogin = new LocalStrategy(localOpts, async (email = '', password = '', done) => {
       try {
+        //console.log('local strategy..');
+        //console.log(email + ' ' + password);
         const user = await User.findOne({ email: email.toLowerCase() });
         const isValid = await user.comparePassword(password);
-
+        //console.log(user);
         return done(null, isValid ? user : {});
       } catch (err) {
+        console.log('logging in error..');
+        console.log(err);
         return done(err);
       }
     });
