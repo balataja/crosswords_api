@@ -8,7 +8,7 @@
     "test": "jest --coverage --watch"
   },
   "engines": {
-    "node": "8.12.0"
+    "node": "16.20.0"
   },
   "repository": "https://github.com/joshuaslate/mkrn-starter.git",
   "author": "Joshua Anderson Slate",
