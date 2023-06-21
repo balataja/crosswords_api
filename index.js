@@ -21,8 +21,10 @@ const app = new Koa()
   // .use(cors({
   //   origin: false,
   // }))
-  .user(cors({
-    origin: "https://balataja-crosswords-app-cfe0671b94fc.herokuapp.com/",
+  .use(cors({
+    //origin: "https://balataja-crosswords-app-cfe0671b94fc.herokuapp.com/",
+    //origin: "http://localhost:8080",
+    origin: false,
     //methods: ["GET", "POST"]
   }))
   // .use(function(req, res, next) {
@@ -47,7 +49,8 @@ const app = new Koa()
 const server = http.createServer(app.callback())
 const io = socket(server, {
   cors: {
-    origin: "https://balataja-crosswords-app-cfe0671b94fc.herokuapp.com/",
+    origin: "https://balataja-crosswords-app-cfe0671b94fc.herokuapp.com",
+    //origin: "https://localhost:8080",
     methods: ["GET", "POST"]
   }
 });
