@@ -18,16 +18,17 @@ mongoose.Promise = global.Promise;
 mongoose.connect(config.database.url, config.database.opts);
 
 const app = new Koa()
-  .use(cors({
-    origin: false,
-  }))
-  .use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", '*');
-    res.header("Access-Control-Allow-Credentials", true);
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
-    next();
-  })
+  // .use(cors({
+  //   origin: false,
+  // }))
+  .user(cors())
+  // .use(function(req, res, next) {
+  //   res.header("Access-Control-Allow-Origin", '*');
+  //   res.header("Access-Control-Allow-Credentials", true);
+  //   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  //   res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+  //   next();
+  // })
   .use(logger())
   .use(bodyParser())
   .use(routes);
@@ -44,7 +45,7 @@ const server = http.createServer(app.callback())
 const io = socket(server, {
   cors: {
     origin: "https://balataja-crosswords-app-cfe0671b94fc.herokuapp.com/",
-    methods: ["GET", "POST"]
+    //methods: ["GET", "POST"]
   }
 });
 
