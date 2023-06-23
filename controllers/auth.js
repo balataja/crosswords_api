@@ -6,6 +6,7 @@ const userUtils = require('../utils/user-utils');
 const emailUtils = require('../utils/email-utils');
 const validationUtils = require('../utils/validation-utils');
 const ERRORS = require('../constants').ERRORS;
+//const bcrypt = require('bcrypt');
 
 const { standardizeUser, generateJWT, getRole } = userUtils;
 const { sendEmail } = emailUtils;
@@ -16,6 +17,7 @@ const { responseValidator } = validationUtils;
  * @param {Object} user User object to convert to generate JWT with
  */
 const createTokenCtx = (user) => {
+  user.games = [];
   const tokenData = generateJWT(user);
 
   return {
@@ -33,6 +35,8 @@ const createTokenCtx = (user) => {
 exports.jwtAuth = (ctx, next) => passport.authenticate('jwt', async (err, payload) => {
   const epochTimestamp = Math.round((new Date()).getTime() / 1000);
 
+  //console.log('jwtAuth..');
+  //console.log(payload);
   // If there is no payload, inform the user they are not authorized to see the content
   if (!payload) {
     ctx.status = 401;
@@ -58,6 +62,10 @@ exports.login = (ctx, next) => passport.authenticate('local', async (err, user) 
     ctx.body = { errors: [{ error: ERRORS.BAD_LOGIN }] };
     await next();
   } else {
+    // console.log('login...');
+    // console.log(user);
+    // let temp = createTokenCtx(user);
+    // console.log(temp);
     ctx.body = Object.assign(ctx.body || {}, createTokenCtx(user));
     await next();
   }
@@ -135,7 +143,8 @@ exports.forgotPassword = async (ctx, next) => {
           'http://'}${ctx.host}/reset-password/${resetToken}\n\n` +
           'If you did not request this, please ignore this email and your password will remain unchanged.\n',
       };
-
+      //console.log('trying to send email..');
+      //console.log(resetToken);
       await sendEmail(email, message);
     }
 
@@ -145,6 +154,7 @@ exports.forgotPassword = async (ctx, next) => {
 
     await next();
   } catch (err) {
+    //console.log('issue sending email..');
     ctx.throw(500, err);
   }
 };
@@ -154,6 +164,8 @@ exports.forgotPassword = async (ctx, next) => {
  * resetPassword  - Allows user with token from email to reset their password
  */
 exports.resetPassword = async (ctx, next) => {
+  //console.log(ctx.params)
+  //console.log(ctx.request.body)
   const { password, confirmPassword } = ctx.request.body;
   const { resetToken } = ctx.params;
 
@@ -162,10 +174,20 @@ exports.resetPassword = async (ctx, next) => {
       ctx.status = 422;
       ctx.body = { errors: [{ error: ERRORS.PASSWORD_CONFIRM_FAIL }] };
     } else {
-      const user = await User.findOneAndUpdate(
+      let user = await User.findOneAndUpdate(
         { resetPasswordToken: resetToken, resetPasswordExpires: { $gt: Date.now() } },
         { password, resetPasswordToken: undefined, resetPasswordExpires: undefined });
 
+      // let user2 = await User.findOne({ email: 'test@test.com' });
+      // console.log(user2);
+      // const salt = await bcrypt.genSalt(5);
+      // user2.password = await bcrypt.hash(password, salt, null);
+      // //user2.password = password;
+      // //console.log('about so register user..');
+      // console.log('new password..')
+      // console.log(user2.password);
+      // const savedUser = await user2.updateOne();
+      
       if (!user) {
         // If no user was found, their reset request likely expired. Tell them that.
         ctx.status = 422;
@@ -211,7 +233,9 @@ exports.requireRole = async role =>
  * getAuthenticatedUser  - Returns JSON for the authenticated user
  */
 exports.getAuthenticatedUser = async (ctx, next) => {
+  //console.log('getAuthenticatedUser..');
   const user = await User.findById(ctx.state.user.id);
+  //console.log(user);
   ctx.status = 200;
   ctx.body = { user: standardizeUser(user) };
   await next();
